@@ -118,3 +118,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = "/static/"
 
 django_heroku.settings(locals())
+
+IFTTT_CHANNEL_KEY="uL2FLxGcAqxO_TzgFFX-jK0MMMOM4-jjBYaoYv2FvR-9d2uzhhERwetz8erPnjVt"
