@@ -17,7 +17,7 @@ import ifttt.views
 # Learn more here: https://docs.djangoproject.com/en/2.1/topics/http/urls/
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     path("", hello.views.index, name="index"),
     path("ifttt/v1/status", ifttt.views.status, name="status"),
     path("ifttt/v1/actions/update", ifttt.views.update, name="update"),
