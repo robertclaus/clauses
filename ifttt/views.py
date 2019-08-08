@@ -101,7 +101,7 @@ def state(request):
     code = trigger_fields.get("code")
 
     # TODO take user into account
-    clause = Clause.objects.get_or_create(key=key, user=None, defaults={"state": "{}"})
+    clause = Clause.objects.get_or_create(key=key, user=None, defaults={"state": "{'test':True}"})
     state = json.loads(clause.state)
 
     def code_exec(code, state):
