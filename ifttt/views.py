@@ -60,12 +60,21 @@ def update(request):
     # TODO take user into account
     clause, created = Clause.objects.get_or_create(key=key, user=None, defaults={"state": "{}"})
     state = json.loads(clause.state)
+
     exec(code, {}, {"state": state})
+
     clause.state = state
     clause.save()
+    clause.refresh_from_db()
+
+    notify(clause)
 
     response_contents = {"ok": "True"}
     return UTFJsonResponse(response_contents)
+
+
+def notify(clause):
+    pass
 
 
 @csrf_exempt
@@ -113,19 +122,19 @@ def test_setup(request):
           "triggers": {
             "state": {
               "key": "test_123",
-              "code": "state.test = True"
+              "code": "return True"
             }
           },
           "actions": {
             "update": {
               "key": "test_123",
-              "code": "return state.test"
+              "code": "state.test = True"
             }
           },
           "actionRecordSkipping": {
             "update": {
               "key": "test_123",
-              "code": "return True"
+              "code": "state.test = True"
             }
           }
         }
