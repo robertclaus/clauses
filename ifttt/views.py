@@ -5,8 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def is_valid(request):
     key = settings.IFTTT_CHANNEL_KEY
-    channel_key = request.GET.get("IFTTT-Channel-Key")
-    service_key = request.GET.get("IFTTT-Service-Key")
+    channel_key = request.META["IFTTT-Channel-Key"]
+    service_key = request.META["IFTTT-Service-Key"]
 
     if key != channel_key or key != service_key:
         return False
@@ -28,7 +28,13 @@ def update(request):
     if not is_valid(request):
         return invalid_response()
 
-    print(f"Key: {request.GET.get('actionFields').get('key')} ; Code: {request.GET.get('actionFields').get('code')}")
+    print(f"Request GET: {request.GET}")
+    print(f"Request POST: {request.POST}")
+    print(f"Request Body: {request.body}")
+
+    #data == undefined || data.actionFields == undefined || data.actionFields.ifttt_device_id == undefined || data.actionFields.data_value == undefined
+
+    #print(f"Key: {request.GET.get('actionFields').get('key')} ; Code: {request.GET.get('actionFields').get('code')}")
 
     response_contents = {"ok": "True"}
     return JsonResponse(response_contents)
