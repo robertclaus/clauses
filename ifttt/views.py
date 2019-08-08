@@ -10,7 +10,7 @@ from ifttt.models import Clause
 class UTFJsonResponse(JsonResponse):
     def __init__(self, data, encoder=DjangoJSONEncoder, safe=True, **kwargs):
         json_dumps_params = dict(ensure_ascii=False)
-        super().__init__(data, encoder, safe, json_dumps_params, content_type="application/json; encoding=utf-8", **kwargs)
+        super().__init__(data, encoder, safe, json_dumps_params, content_type="application/json; charset=utf-8", **kwargs)
 
 
 def is_valid(request):
@@ -82,7 +82,22 @@ def state(request):
     if not contents or not trigger_fields or not trigger_fields.get('key') or not trigger_fields.get('code'):
         return UTFJsonResponse({"errors": [{"message": "Missing Field."}]}, status=400)
 
-    response_contents = {"ok": "True"}
+    key = trigger_fields.get("code")
+    code = trigger_fields.get("code")
+
+    # TODO take user into account
+    clause = Clause.objects.get_or_create(key=key, user=None, defaults={"state": "{}"})
+    state = json.loads(clause.state)
+
+    def code_exec(code, state):
+        exec(code, {}, {"state": state})
+        return False
+
+    should_trigger = code_exec(code, state)
+    clause.state = state
+    clause.save()
+
+    response_contents = {"ok": should_trigger}
     return UTFJsonResponse(response_contents)
 
 
