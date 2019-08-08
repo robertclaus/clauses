@@ -3,9 +3,9 @@ from django.db import models
 
 # Create your models here.
 class Clause(models.Model):
-    user = models.CharField(null=True)
-    key = models.CharField(null=True)
-    state = models.CharField(null=True)
+    user = models.TextField(null=True)
+    key = models.TextField(null=True)
+    state = models.TextField(null=True)
 
 
 class Event(models.Model):
