@@ -1,4 +1,5 @@
-from django.core.serializers import json
+import json
+
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.conf import settings
