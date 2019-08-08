@@ -5,10 +5,12 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def is_valid(request):
-    key = settings.IFTTT_CHANNEL_KEY
+    key = "uL2FLxGcAqxO_TzgFFX-jK0MMMOM4-jjBYaoYv2FvR-9d2uzhhERwetz8erPnjVt"
     print(f"Headers: {request.META}")
     channel_key = request.META.get("HTTP_IFTTT_CHANNEL_KEY")
     service_key = request.META.get("HTTP_IFTTT_SERVICE_KEY")
+
+    print(f"key={key}, c_key={channel_key}, s_key={service_key}")
 
     if not channel_key or not service_key or key != channel_key or key != service_key:
         return False
