@@ -10,7 +10,7 @@ from ifttt.models import Clause
 class UTFJsonResponse(JsonResponse):
     def __init__(self, data, encoder=DjangoJSONEncoder, safe=True, **kwargs):
         json_dumps_params = dict(ensure_ascii=False)
-        super().__init__(data, encoder, safe, json_dumps_params, **kwargs)
+        super().__init__(data, encoder, safe, json_dumps_params, content_type="application/json; encoding=utf-8", **kwargs)
 
 
 def is_valid(request):
@@ -56,9 +56,10 @@ def update(request):
     key = action_fields.get("code")
     code = action_fields.get("code")
 
+    # TODO take user into account
     clause = Clause.objects.get_or_create(key=key, user=None, defaults={"state": "{}"})
     state = json.loads(clause.state)
-    eval(code, {}, {"state": state})
+    exec(code, {}, {"state": state})
     clause.state = state
     clause.save()
 
