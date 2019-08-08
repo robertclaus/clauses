@@ -5,6 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 import hello.views
+import ifttt.views
 
 # To add a new path, first import the app:
 # import blog
@@ -16,4 +17,5 @@ import hello.views
 
 urlpatterns = [
     path("", hello.views.index, name="index"),
+    path("ifttt/v1/test/setup", ifttt.views.test_setup, name="test_setup")
 ]
