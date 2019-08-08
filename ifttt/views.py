@@ -15,6 +15,8 @@ def is_valid(request):
     if not channel_key or not service_key or key != channel_key or key != service_key:
         return False
 
+    return True
+
 
 def invalid_response():
     return JsonResponse({"errors": [{"message": "IFTTT sent an OAuth2 access token that isn’t valid."}]}, status=401)
