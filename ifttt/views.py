@@ -16,11 +16,8 @@ class UTFJsonResponse(JsonResponse):
 
 def is_valid(request):
     key = settings.IFTTT_CHANNEL_KEY
-    print(f"Headers: {request.META}")
     channel_key = request.META.get("HTTP_IFTTT_CHANNEL_KEY")
     service_key = request.META.get("HTTP_IFTTT_SERVICE_KEY")
-
-    print(f"key={key}, c_key={channel_key}, s_key={service_key}")
 
     if not channel_key or not service_key or key != channel_key or key != service_key:
         return False
@@ -48,13 +45,15 @@ def update(request):
     print(f"Request POST: {request.POST}")
     print(f"Request Body: {request.body}")
 
-    contents = json.loads(request.body.decode('utf-8'))
+    decoded = request.body.decode('utf-8')
+    contents = json.loads(decoded)
+    print(f"decoded: {decoded}, json: {contents}")
     action_fields = contents.get('actionFields')
 
     if not contents or not action_fields or not action_fields.get('key') or not action_fields.get('code'):
         return UTFJsonResponse({"errors": [{"message": "Missing Field."}]}, status=400)
 
-    key = action_fields.get("code")
+    key = action_fields.get("key")
     code = action_fields.get("code")
 
     # TODO take user into account
@@ -86,17 +85,15 @@ def state(request):
     print(f"Request POST: {request.POST}")
     print(f"Request Body: {request.body}")
 
-    decoded=request.body.decode('utf-8')
-    json_value = json.loads(decoded)
-    print(f"decoded: {decoded}, json: {json_value}")
-
-    contents = json_value
+    decoded = request.body.decode('utf-8')
+    contents = json.loads(decoded)
+    print(f"decoded: {decoded}, json: {contents}")
     trigger_fields = contents.get('triggerFields')
 
     if not contents or not trigger_fields or not trigger_fields.get('key') or not trigger_fields.get('code'):
         return UTFJsonResponse({"errors": [{"message": "Missing Field."}]}, status=400)
 
-    key = trigger_fields.get("code")
+    key = trigger_fields.get("key")
     code = trigger_fields.get("code")
 
     # TODO take user into account
