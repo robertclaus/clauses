@@ -1,3 +1,4 @@
+from django.core.serializers import json
 from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -5,10 +6,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 def is_valid(request):
     key = settings.IFTTT_CHANNEL_KEY
-    channel_key = request.META["IFTTT-Channel-Key"]
-    service_key = request.META["IFTTT-Service-Key"]
+    print(f"Headers: {request.META}")
+    channel_key = request.META.get("IFTTT-Channel-Key")
+    service_key = request.META.get("IFTTT-Service-Key")
 
-    if key != channel_key or key != service_key:
+    if not channel_key or not service_key or key != channel_key or key != service_key:
         return False
 
 
@@ -32,9 +34,11 @@ def update(request):
     print(f"Request POST: {request.POST}")
     print(f"Request Body: {request.body}")
 
-    #data == undefined || data.actionFields == undefined || data.actionFields.ifttt_device_id == undefined || data.actionFields.data_value == undefined
+    contents = json.loads(request.body.decode('utf-8'))
+    action_fields = contents.get('actionFields')
 
-    #print(f"Key: {request.GET.get('actionFields').get('key')} ; Code: {request.GET.get('actionFields').get('code')}")
+    if not contents or not action_fields or not action_fields.get('key') or not action_fields.get('code'):
+        return JsonResponse({"errors": [{"message": "Missing Field."}]}, status=400)
 
     response_contents = {"ok": "True"}
     return JsonResponse(response_contents)
