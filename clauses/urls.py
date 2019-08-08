@@ -18,5 +18,6 @@ import ifttt.views
 urlpatterns = [
     path("", hello.views.index, name="index"),
     path("ifttt/v1/status", ifttt.views.status, name="status"),
+    path("/ifttt/v1/actions/update", ifttt.views.update, name="update"),
     path("ifttt/v1/test/setup", ifttt.views.test_setup, name="test_setup"),
 ]

@@ -5,8 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def is_valid(request):
     key = settings.IFTTT_CHANNEL_KEY
-    channel_key = request.get("IFTTT-Channel-Key")
-    service_key = request.get("IFTTT-Service-Key")
+    channel_key = request.GET.get("IFTTT-Channel-Key")
+    service_key = request.GET.get("IFTTT-Service-Key")
 
     if key != channel_key or key != service_key:
         return False
@@ -21,6 +21,17 @@ def status(request):
     if not is_valid(request):
         return invalid_response()
     return JsonResponse({"status": "Live"})
+
+
+@csrf_exempt
+def update(request):
+    if not is_valid(request):
+        return invalid_response()
+
+    print(f"Key: {request.GET.get('actionFields').get('key')} ; Code: {request.GET.get('actionFields').get('code')}")
+
+    response_contents = {"ok": "True"}
+    return JsonResponse(response_contents)
 
 
 @csrf_exempt
