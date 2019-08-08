@@ -1,4 +1,5 @@
-from django.urls import path
+from django.conf.urls import url
+from django.urls import path, include
 
 from django.contrib import admin
 
@@ -16,7 +17,7 @@ import ifttt.views
 # Learn more here: https://docs.djangoproject.com/en/2.1/topics/http/urls/
 
 urlpatterns = [
-    path(r'^admin/', admin.site.urls, name="admin"),
+    url(r'^admin/', include(admin.site.urls)),
     path("", hello.views.index, name="index"),
     path("ifttt/v1/status", ifttt.views.status, name="status"),
     path("ifttt/v1/actions/update", ifttt.views.update, name="update"),

@@ -59,7 +59,7 @@ def update(request):
     code = action_fields.get("code")
 
     # TODO take user into account
-    clause, created = Clause.objects.get_or_create(key=key, user=None, defaults={"state": "{}"})
+    clause, created = Clause.objects.get_or_create(key=key, user=None, defaults={"state": "{'test':True}"})
     state = json.loads(clause.state)
 
     exec(code, {}, {"state": state})
