@@ -86,7 +86,11 @@ def state(request):
     print(f"Request POST: {request.POST}")
     print(f"Request Body: {request.body}")
 
-    contents = json.loads(request.body.decode('utf-8'))
+    decoded=request.body.decode('utf-8')
+    json_value = json.loads(decoded)
+    print(f"decoded: {decoded}, json: {json_value}")
+
+    contents = json_value
     trigger_fields = contents.get('triggerFields')
 
     if not contents or not trigger_fields or not trigger_fields.get('key') or not trigger_fields.get('code'):
