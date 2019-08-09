@@ -99,6 +99,7 @@ def state(request):
 
     key = trigger_fields.get("key")
     code = trigger_fields.get("code")
+    limit = trigger_fields.get("limit", 100)
 
     # TODO take user into account
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
@@ -110,17 +111,17 @@ def state(request):
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
     if should_trigger:
-        Event.objects.create(timestamp=datetime.now(), clause=clause)
+        Event.objects.create(timestamp=datetime.now(), clause=clause)[:limit]
 
     clause.state = json.dumps(state)
     clause.save()
 
-    events = Event.objects.filter(clause=clause)
+    events = Event.objects.filter(clause=clause).order_by('-timestamp')
 
     response_contents = []
     for event in events:
         response_contents.append({
-            "meta": {"key": str(event.pk), "id": str(event.pk), "timestamp": str(event.timestamp.timestamp())},
+            "meta": {"key": str(event.pk), "id": str(event.pk), "timestamp": str(int(event.timestamp.timestamp()))},
             "created_at": event.timestamp.isoformat(),
         })
 
@@ -153,7 +154,7 @@ def test_setup(request):
           "actionRecordSkipping": {
             "update": {
               "key": "test_123",
-              "code": "state['test'] = True"
+              "code": "test = state.notanattribute"
             }
           }
         }
