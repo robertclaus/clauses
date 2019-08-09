@@ -92,8 +92,6 @@ def state(request):
     print(f"decoded: {decoded}, json: {contents}")
     trigger_fields = contents.get('triggerFields')
 
-    print(f"contents:{not contents}, fields:{not trigger_fields}, key:{not trigger_fields.get('key')}, code:{not trigger_fields.get('code')}")
-
     if not contents or not trigger_fields or not trigger_fields.get('key') or not trigger_fields.get('code'):
         return UTFJsonResponse({"errors": [{"message": "Missing Field."}]}, status=400)
 
@@ -133,13 +131,13 @@ def test_setup(request):
           "actions": {
             "update": {
               "key": "test_123",
-              "code": "state.test = True"
+              "code": "state['test'] = True"
             }
           },
           "actionRecordSkipping": {
             "update": {
               "key": "test_123",
-              "code": "state.test = True"
+              "code": "state['test'] = True"
             }
           }
         }
