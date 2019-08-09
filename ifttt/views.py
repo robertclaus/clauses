@@ -107,9 +107,11 @@ def state(request):
 
     should_trigger = False
     try:
-        exec(code, {}, {"state": state})
+        exec(code, {}, {"state": state, "should_trigger": should_trigger})
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
+
+    print(f"Should Trigger? : {should_trigger}")
 
     if should_trigger:
         Event.objects.create(timestamp=datetime.now(), clause=clause)
