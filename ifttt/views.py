@@ -105,12 +105,16 @@ def state(request):
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
     state = json.loads(clause.state)
 
+    print(f"Clause Before: {clause}")
+    print(f"Code Before: {code}")
+
     should_trigger = False
     try:
         exec(code)
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
+    print(f"Clause After: {clause}")
     print(f"Should Trigger? : {should_trigger}")
 
     if should_trigger:
