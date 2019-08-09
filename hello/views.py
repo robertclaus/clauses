@@ -3,9 +3,7 @@ from django.http import JsonResponse
 
 def index(request):
     data = {
-        'name': 'Vitor',
-        'location': 'Finland',
-        'is_active': True,
-        'count': 28
+        'message': 'Welcome!',
+        'todo': 'Make Landing Page',
     }
     return JsonResponse(data)
