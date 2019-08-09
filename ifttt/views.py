@@ -120,6 +120,8 @@ def state(request):
             "created_at": event.timestamp.isoformat(),
         })
 
+    response_contents = {"data": response_contents}
+
     print(f"response content: {response_contents}")
     return UTFJsonResponse(response_contents)
 
