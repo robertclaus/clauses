@@ -60,7 +60,10 @@ def update(request):
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
     state = json.loads(clause.state)
 
-    exec(code, {}, {"state": state})
+    try:
+        exec(code, {}, {"state": state})
+    except Exception:
+        return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
     clause.state = json.dumps(state)
     clause.save()
@@ -100,11 +103,11 @@ def state(request):
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
     state = json.loads(clause.state)
 
-    def code_exec(code, state):
-        return eval(code, {}, {"state": state})
-        return False
+    try:
+        should_trigger = eval(code, {}, {"state": state})
+    except Exception:
+        return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
-    should_trigger = code_exec(code, state)
     clause.state = json.dumps(state)
     clause.save()
 
