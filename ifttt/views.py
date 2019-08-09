@@ -110,8 +110,10 @@ def state(request):
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
-    if should_trigger:
+    if should_trigger is not clause.last_true:
         Event.objects.create(timestamp=datetime.now(), clause=clause)
+        clause.last_true = should_trigger
+        clause.save()
 
     clause.state = json.dumps(state)
     clause.save()

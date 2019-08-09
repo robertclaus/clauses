@@ -6,6 +6,7 @@ class Clause(models.Model):
     user = models.TextField(null=True, blank=True)
     key = models.TextField(null=True)
     state = models.TextField(null=True)
+    last_true = models.BooleanField(default=False)
 
 
 class Event(models.Model):
