@@ -57,7 +57,7 @@ def update(request):
     code = action_fields.get("code")
 
     # TODO take user into account
-    clause, created = Clause.objects.get_or_create(key=key, user=None, defaults={"state": '{"test":true}'})
+    clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
     state = json.loads(clause.state)
 
     exec(code, {}, {"state": state})
@@ -97,7 +97,7 @@ def state(request):
     code = trigger_fields.get("code")
 
     # TODO take user into account
-    clause, created = Clause.objects.get_or_create(key=key, user=None, defaults={"state": '{"test":true}'})
+    clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
     state = json.loads(clause.state)
 
     def code_exec(code, state):
