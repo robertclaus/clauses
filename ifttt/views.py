@@ -68,7 +68,7 @@ def update(request):
 
     notify(clause)
 
-    response_contents = {"ok": "True"}
+    response_contents = {"data": [{"id": "1"}]}
     return UTFJsonResponse(response_contents)
 
 
