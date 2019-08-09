@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from ifttt.models import Clause
+from ifttt.models import Clause, Event
 
 
 class UTFJsonResponse(JsonResponse):
@@ -49,8 +49,6 @@ def update(request):
     contents = json.loads(decoded)
     print(f"decoded: {decoded}, json: {contents}")
     action_fields = contents.get('actionFields')
-
-    print(f"contents:{not contents}, fields:{not action_fields}, key:{not action_fields.get('key')}, code:{not action_fields.get('code')}")
 
     if not contents or not action_fields or not action_fields.get('key') or not action_fields.get('code'):
         return UTFJsonResponse({"errors": [{"message": "Missing Field."}]}, status=400)
@@ -103,14 +101,23 @@ def state(request):
     state = json.loads(clause.state)
 
     def code_exec(code, state):
-        exec(code, {}, {"state": state})
+        return eval(code, {}, {"state": state})
         return False
 
     should_trigger = code_exec(code, state)
     clause.state = state
     clause.save()
 
-    response_contents = {"ok": should_trigger}
+    events = Event.objects.all()
+
+    response_contents = []
+    for event in events:
+        response_contents.append({
+            "meta": {"key": str(event.pk), "id": str(event.pk), "timestamp": str(event.timestamp.timestamp())},
+            "created_at": event.timestamp.isoformat(),
+        })
+
+    print(f"response content: {response_contents}")
     return UTFJsonResponse(response_contents)
 
 
@@ -125,7 +132,7 @@ def test_setup(request):
           "triggers": {
             "state": {
               "key": "test_123",
-              "code": "return True"
+              "code": "True"
             }
           },
           "actions": {
