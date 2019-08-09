@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder
@@ -107,6 +108,9 @@ def state(request):
         should_trigger = eval(code, {}, {"state": state})
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
+
+    if should_trigger:
+        Event.objects.create(timestamp=datetime.now())
 
     clause.state = json.dumps(state)
     clause.save()
