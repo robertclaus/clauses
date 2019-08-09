@@ -9,7 +9,7 @@ from ifttt.models import Clause, Event
 
 
 class UTFJsonResponse(JsonResponse):
-    def __init__(self, data, encoder=DjangoJSONEncoder, safe=True, **kwargs):
+    def __init__(self, data, encoder=DjangoJSONEncoder, safe=False, **kwargs):
         json_dumps_params = dict(ensure_ascii=False)
         super().__init__(data, encoder, safe, json_dumps_params, content_type="application/json; charset=utf-8", **kwargs)
 
