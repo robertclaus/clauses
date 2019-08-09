@@ -99,7 +99,7 @@ def state(request):
 
     key = trigger_fields.get("key")
     code = trigger_fields.get("code")
-    limit = trigger_fields.get("limit", 100)
+    limit = contents.get("limit", 100)
 
     # TODO take user into account
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
