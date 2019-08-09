@@ -10,3 +10,4 @@ class Clause(models.Model):
 
 class Event(models.Model):
     timestamp = models.DateTimeField(null=True)
+    clause = models.ForeignKey(Clause, on_delete=models.CASCADE)
