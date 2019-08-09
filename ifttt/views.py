@@ -105,14 +105,16 @@ def state(request):
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
     state = json.loads(clause.state)
 
+    should_trigger = False
     try:
-        should_trigger = eval(code, {}, {"state": state})
+        exec(code, {}, {"state": state})
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
     if should_trigger and not clause.last_true:
         Event.objects.create(timestamp=datetime.now(), clause=clause)
         clause.last_true = True
+        notify(clause)  # Makes sure that if you reset the state, it immediately polls again to catch it.
     elif not should_trigger and clause.last_true:
         clause.last_true = False
 
@@ -145,7 +147,7 @@ def test_setup(request):
           "triggers": {
             "state": {
               "key": "test_123",
-              "code": "True"
+              "code": "should_trigger = True"
             }
           },
           "actions": {
