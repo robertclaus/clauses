@@ -110,12 +110,12 @@ def state(request):
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
     if should_trigger:
-        Event.objects.create(timestamp=datetime.now())
+        Event.objects.create(timestamp=datetime.now(), clause=clause)
 
     clause.state = json.dumps(state)
     clause.save()
 
-    events = Event.objects.all()
+    events = Event.objects.filter(clause=clause)
 
     response_contents = []
     for event in events:
