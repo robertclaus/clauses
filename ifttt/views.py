@@ -62,7 +62,7 @@ def update(request):
     state = json.loads(clause.state)
 
     try:
-        exec(code, {}, {"state": state})
+        exec(code)
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
@@ -107,7 +107,7 @@ def state(request):
 
     should_trigger = False
     try:
-        exec(code, {}, {"state": state, "should_trigger": should_trigger})
+        exec(code)
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
