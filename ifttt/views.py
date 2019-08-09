@@ -62,7 +62,7 @@ def update(request):
 
     exec(code, {}, {"state": state})
 
-    clause.state = state
+    clause.state = json.dumps(state)
     clause.save()
     clause.refresh_from_db()
 
@@ -105,7 +105,7 @@ def state(request):
         return False
 
     should_trigger = code_exec(code, state)
-    clause.state = state
+    clause.state = json.dumps(state)
     clause.save()
 
     events = Event.objects.all()
