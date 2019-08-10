@@ -12,5 +12,10 @@ class EventAdmin(admin.ModelAdmin):
     pass
 
 
+class TriggerAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(Clause, ClauseAdmin)
 admin.site.register(Event, EventAdmin)
+admin.site.register(Event, TriggerAdmin)
