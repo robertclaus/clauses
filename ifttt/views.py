@@ -159,7 +159,7 @@ def state(request):
 
 
 @csrf_exempt
-def state(key):
+def state(request, key):
     # TODO user support
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{}'})
     state = json.loads(clause.state)
