@@ -12,3 +12,9 @@ class Clause(models.Model):
 class Event(models.Model):
     timestamp = models.DateTimeField(null=True)
     clause = models.ForeignKey(Clause, on_delete=models.CASCADE, null=True)
+
+
+class Trigger(models.Model):
+    last_code = models.CharField(max_length=5000, null=True, blank=True)
+    clause = models.ForeignKey(Clause, on_delete=models.CASCADE, null=True)
+    trigger_identity = models.CharField(max_length=5000, null=True, blank=True)

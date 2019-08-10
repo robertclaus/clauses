@@ -1,12 +1,13 @@
 from datetime import datetime
 import json
 
+import requests
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from ifttt.models import Clause, Event
+from ifttt.models import Clause, Event, Trigger
 
 
 class UTFJsonResponse(JsonResponse):
@@ -77,7 +78,21 @@ def update(request):
 
 
 def notify(clause):
-    pass
+    clause.refresh_from_db()
+    triggers = clause.trigger_set.all()
+
+    url = settings.IFTTT_REALTIME_URL
+    key = settings.IFTTT_CHANNEL_KEY
+
+    data = []
+    for trigger in triggers:
+        data.append({"trigger_identity": trigger.trigger_identity})
+
+    post_data = {"data": data}
+    print(f"notify request: {post_data}")
+    response = requests.post(url, data=json.dumps(post_data))
+    content = response.content
+    print(f"notify response: {content}")
 
 
 @csrf_exempt
@@ -100,9 +115,12 @@ def state(request):
     key = trigger_fields.get("key")
     code = trigger_fields.get("code")
     limit = contents.get("limit", 100)
+    trigger_identity = contents.get("trigger_identity", "")
 
     # TODO take user into account
     clause, created = Clause.objects.get_or_create(key=key, user="test", defaults={"state": '{"test":true}'})
+    trigger, created = Trigger.objects.get_or_create(clause=clause, last_code=code, trigger_identity=trigger_identity)
+
     state = json.loads(clause.state)
 
     print(f"Clause Before: {state}")
