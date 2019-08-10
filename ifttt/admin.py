@@ -18,4 +18,4 @@ class TriggerAdmin(admin.ModelAdmin):
 
 admin.site.register(Clause, ClauseAdmin)
 admin.site.register(Event, EventAdmin)
-admin.site.register(Event, TriggerAdmin)
+admin.site.register(Trigger, TriggerAdmin)
