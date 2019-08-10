@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from ifttt.models import Clause, Event
+from ifttt.models import Clause, Event, Trigger
 
 
 class ClauseAdmin(admin.ModelAdmin):
