@@ -90,7 +90,7 @@ def notify(clause):
 
     post_data = {"data": data}
     print(f"notify request: {post_data}")
-    response = requests.post(url, data=json.dumps(post_data), headers={"IFTTT-Service-Key": key})
+    response = requests.post(url, data=json.dumps(post_data), headers={"IFTTT-Service-Key": key, "Content-Type": "application/json"})
     content = response.content
     print(f"notify response: {content}")
 
