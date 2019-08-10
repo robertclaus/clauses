@@ -23,4 +23,5 @@ urlpatterns = [
     path("ifttt/v1/actions/update", ifttt.views.update, name="update"),
     path("ifttt/v1/triggers/state", ifttt.views.state, name="state"),
     path("ifttt/v1/test/setup", ifttt.views.test_setup, name="test_setup"),
+    path("state/<key>", ifttt.views.state, name="state")
 ]
