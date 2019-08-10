@@ -108,9 +108,10 @@ def state(request):
     print(f"Clause Before: {state}")
     print(f"Code Before: {code}")
 
-    should_trigger = False
     try:
-        exec(code)
+        locals = {'should_trigger': False}
+        exec(code, globals(), locals)
+        should_trigger = locals.get('should_trigger', False)
     except Exception:
         return UTFJsonResponse({"errors": [{"status": "SKIP", "message": "Missing record referred to."}]}, status=400)
 
